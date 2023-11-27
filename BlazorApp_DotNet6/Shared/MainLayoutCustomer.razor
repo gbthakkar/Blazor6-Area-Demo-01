@@ -1,0 +1,68 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>BlazorApp_DotNet6</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        CUSTOMER AREA MAIN LAYOUT
+        <NavLink class="nav-link" href="/" target="_top">
+            <span class="oi oi-plus" aria-hidden="true"></span> Go back to main site
+        </NavLink>
+        <NavLink class="nav-link" href="/admin" target="_top">
+            <span class="oi oi-plus" aria-hidden="true"></span> Go To Admin Section
+        </NavLink>
+        <NavLink class="nav-link" href="" @onclick="LogoutUser">
+            <span class="oi oi-plus" aria-hidden="true"></span> Logout from Customer
+        </NavLink>
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            <h3>Main layout - Customer</h3>
+            @Body
+        </article>
+    </main>
+</div>
+
+@code
+{
+    private bool _isPageReady = false;
+    private int _accId = 0;
+    private string _userName = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        //check always
+        if ((await _SessionData.GetCustomerAccIdAsync()) == 0)
+        {
+            _navigation.NavigateTo(PageUrl.Customer.CustomerLogin);
+            return;
+        }
+        if (firstRender)
+        {
+            await LoadInitialData();
+            _isPageReady = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoadInitialData()
+    {
+        _accId = await _SessionData.GetCustomerAccIdAsync();
+        _userName = await _SessionData.GetCustomerUserNameAsync();
+    }
+
+    private async Task LogoutUser()
+    {
+        await _SessionData.SetCustomerAccIdAsync(0);
+        await _SessionData.SetCustomerLoginNameAsync("");
+        _navigation.NavigateTo(PageUrl.Customer.CustomerLogin, forceLoad: true);
+    }
+
+
+}

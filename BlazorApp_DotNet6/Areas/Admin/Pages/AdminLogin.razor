@@ -1,0 +1,101 @@
+﻿@page "/Admin/Login"
+@using Microsoft.AspNetCore.Components
+
+@layout AdminLoginLayout
+
+
+
+<h3>AdminLogin</h3>
+
+@if (_isPageReady == false)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>Note: user name = admin</div>
+    <div>Note: password = admin</div>
+    <EditForm Model="_userDto" OnValidSubmit="ValidateUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary></ValidationSummary>
+        <fieldset>
+            <label class="block clearfix">
+                <span class="block input-icon input-icon-right">
+                    <InputText @bind-Value="_userDto.LoginId" class="form-control" 
+                               placeholder="User Name" maxlength="20" DisplayName="User Name"/>
+                    <i class="ace-icon fa fa-user"></i>
+                </span>
+            </label>
+
+            <label class="block clearfix">
+                <span class="block input-icon input-icon-right">
+                    <InputText @bind-Value="_userDto.Password" type="password" class="form-control" placeholder="Password" />
+                    <i class="ace-icon fa fa-lock"></i>
+                </span>
+            </label>
+
+            <div class="space"></div>
+
+            <div class="clearfix">
+                <label class="inline">
+                    <input type="checkbox" class="ace" />
+                    <span class="lbl">Remember Me</span>
+                </label>
+
+                <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-key"></i>
+                    <span class="bigger-110">Login</span>
+                </button>
+            </div>
+
+            <div class="space-4"></div>
+        </fieldset>
+    </EditForm>
+
+}
+
+
+
+@code {
+    private bool _isPageReady = false;
+    private ViewModel.Login _userDto = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await LoadInitialData();
+            _isPageReady = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoadInitialData()
+    {
+
+    }
+
+    private async void ValidateUser()
+    {
+        _userDto = _userDto.TrimStringFields();
+
+        if (_userDto.LoginId.ToLower() == "admin" && _userDto.Password.ToLower() == "admin")
+        {
+
+            await SetSessionValuesAsync(_userDto);
+            _navigation.NavigateTo(PageUrl.Admin.Index);
+        }
+
+    }
+
+    private async Task SetSessionValuesAsync(ViewModel.Login dto)
+    {
+
+        await _SessionData.SetAdminUserIdAsync(1);
+        await _SessionData.SetAdminUserNameAsync("admin");
+    //_sessionData.Roles = roles;
+    //_sessionData.AppModeName = _config.AppMode;
+    }
+
+}

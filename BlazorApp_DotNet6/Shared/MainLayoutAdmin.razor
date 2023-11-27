@@ -1,0 +1,81 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>BlazorApp_DotNet6</PageTitle>
+
+
+@if (_isPageReady == false)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="page">
+     <div class="sidebar">
+         ADMIN AREA MAIN LAYOUT
+         <NavLink class="nav-link" href="/" target="_top">
+             <span class="oi oi-plus" aria-hidden="true"></span> Go back to main site
+         </NavLink>
+         <NavLink class="nav-link" href="/customer" target="_top">
+             <span class="oi oi-plus" aria-hidden="true"></span> Go To Customer Section
+         </NavLink>
+
+            <NavLink class="nav-link" href="" @onclick="LogoutUser">
+                <span class="oi oi-plus" aria-hidden="true"></span> Logout from Admin
+            </NavLink>
+
+     </div>
+
+     <main>
+         <div class="top-row px-4">
+             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+         </div>
+
+         <article class="content px-4">
+             <h3>Main layout - Admin</h3>
+             @Body
+         </article>
+     </main>
+ </div>
+
+}
+
+
+
+@code
+{
+    private bool _isPageReady = false;
+    private int _adminId = 0;
+    private string _adminUserName = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+    //check always
+        if ((await _SessionData.GetAdminUserIdAsync()) == 0)
+        {
+            _navigation.NavigateTo(PageUrl.Admin.AdminLogin);
+            return;
+        }
+        if (firstRender)
+        {
+            await LoadInitialData();
+            _isPageReady = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoadInitialData()
+    {
+        _adminId = await _SessionData.GetAdminUserIdAsync();
+        _adminUserName = await _SessionData.GetAdminUserNameAsync();
+    }
+
+    private async Task LogoutUser()
+    {
+        await _SessionData.SetAdminUserIdAsync(0);
+        await _SessionData.SetAdminUserNameAsync("");
+        _navigation.NavigateTo(PageUrl.Admin.AdminLogin, forceLoad: true);
+    }
+
+
+}

@@ -1,0 +1,13 @@
+﻿global using System.Net.Http;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Components.Authorization;
+global using Microsoft.AspNetCore.Components.Forms;
+global using Microsoft.AspNetCore.Components.Routing;
+global using Microsoft.AspNetCore.Components.Web;
+global using Microsoft.AspNetCore.Components.Web.Virtualization;
+global using Microsoft.JSInterop;
+global using BlazorApp_DotNet6;
+global using BlazorApp_DotNet6.Shared;
+global using BlazorApp_DotNet6.Pages;
+global using BlazorApp_DotNet6.CustomValidation;
+global using BlazorApp_DotNet6.ViewModel;
