@@ -53,7 +53,7 @@ else
     //check always
         if ((await _SessionData.GetAdminUserIdAsync()) == 0)
         {
-            _navigation.NavigateTo(PageUrl.Admin.AdminLogin);
+            _navigation.NavigateTo(PageUrl.Admin.Login);
             return;
         }
         if (firstRender)
@@ -74,7 +74,7 @@ else
     {
         await _SessionData.SetAdminUserIdAsync(0);
         await _SessionData.SetAdminUserNameAsync("");
-        _navigation.NavigateTo(PageUrl.Admin.AdminLogin, forceLoad: true);
+        _navigation.NavigateTo(PageUrl.Admin.Login, forceLoad: true);
     }
 
 

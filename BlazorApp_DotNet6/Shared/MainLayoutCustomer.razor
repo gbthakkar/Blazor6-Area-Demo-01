@@ -40,7 +40,7 @@
         //check always
         if ((await _SessionData.GetCustomerAccIdAsync()) == 0)
         {
-            _navigation.NavigateTo(PageUrl.Customer.CustomerLogin);
+            _navigation.NavigateTo(PageUrl.Customer.Login);
             return;
         }
         if (firstRender)
@@ -61,7 +61,7 @@
     {
         await _SessionData.SetCustomerAccIdAsync(0);
         await _SessionData.SetCustomerLoginNameAsync("");
-        _navigation.NavigateTo(PageUrl.Customer.CustomerLogin, forceLoad: true);
+        _navigation.NavigateTo(PageUrl.Customer.Login, forceLoad: true);
     }
 
 

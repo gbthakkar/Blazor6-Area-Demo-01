@@ -1,9 +1,24 @@
-﻿@* This is actually considers the whole assembly, no need to change AppAssembly here. *@
+﻿@using System.Globalization
+@* This is actually considers the whole assembly, no need to change AppAssembly here. *@
 
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayoutCustomer)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        @{
+            string baseRelativePath = _navigation.ToBaseRelativePath(_navigation.Uri);
+            if (baseRelativePath.ToLower(CultureInfo.InvariantCulture).StartsWith("customer"))
+            {
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayoutCustomer)" />
+            }
+            else
+            {
+                <LayoutView Layout="@typeof(MainLayoutCustomer)">
+                    <h3 role="alert">Sorry, This content is not available in customer application.</h3>
+                </LayoutView>
+            }
+            
+        }
+        
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
